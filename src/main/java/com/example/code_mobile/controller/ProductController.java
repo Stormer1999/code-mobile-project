@@ -38,4 +38,22 @@ public class ProductController {
         products.add(data);
         return data;
     }
+
+    @PutMapping("/{id}")
+    public void editProduct(
+            @RequestBody Product product,
+            @PathVariable long id
+    ){
+        products.stream()
+                .filter(result -> result.getId() == id)
+                .findFirst()
+                .ifPresentOrElse(result -> {
+                    result.setName(product.getName());
+                    result.setImage(product.getImage());
+                    result.setPrice(product.getPrice());
+                    result.setStock(product.getStock());
+                }, () -> {
+                    //todo
+                });
+    }
 }
