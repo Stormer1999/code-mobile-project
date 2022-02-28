@@ -2,6 +2,7 @@ package com.example.code_mobile.controller;
 
 import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.model.Product;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class ProductController {
   }
 
   @PostMapping()
+  @ResponseStatus(HttpStatus.CREATED)
   public Product addProduct(@RequestBody Product product) {
     Product data =
         new Product(
@@ -59,6 +61,7 @@ public class ProductController {
   }
 
   @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteProduct(@PathVariable Long id) {
     products.stream()
         .filter(result -> result.getId() == id)
