@@ -1,5 +1,6 @@
 package com.example.code_mobile.controller;
 
+import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.model.Product;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,10 @@ public class ProductController {
 
   @GetMapping("/{id}")
   public Product getProduct(@PathVariable long id) {
-    return products.stream().filter(result -> result.getId() == id).findFirst().orElseThrow();
+    return products.stream()
+        .filter(result -> result.getId() == id)
+        .findFirst()
+        .orElseThrow(() -> new ProductNotFoundException(id));
   }
 
   @PostMapping()
@@ -50,7 +54,19 @@ public class ProductController {
               result.setStock(product.getStock());
             },
             () -> {
-              // todo
+              throw new ProductNotFoundException(id);
+            });
+  }
+
+  @DeleteMapping("/{id}")
+  public void deleteProduct(@PathVariable Long id) {
+    products.stream()
+        .filter(result -> result.getId() == id)
+        .findFirst()
+        .ifPresentOrElse(
+            products::remove,
+            () -> {
+              throw new ProductNotFoundException(id);
             });
   }
 }
