@@ -1,10 +1,9 @@
-package com.example.code_mobile.controller;
+package com.example.code_mobile.controller.api;
 
 import com.example.code_mobile.util.DateUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 //@RestController
 public class DemoController {

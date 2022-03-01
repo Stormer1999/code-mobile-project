@@ -1,13 +1,16 @@
-package com.example.code_mobile.controller;
+package com.example.code_mobile.controller.api;
 
+import com.example.code_mobile.controller.request.ProductRequest;
 import com.example.code_mobile.exception.ProductNotFoundException;
+import com.example.code_mobile.exception.ValidationException;
 import com.example.code_mobile.model.Product;
 import com.example.code_mobile.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,21 +43,27 @@ public class ProductController {
 
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)
-  public Product addProduct(@RequestParam MultipartFile file
-  )
-//          , @RequestBody Product product)
-  {
-    String fileName = storageService.store(file);
-//    Product data =
-//        new Product(
-//            counter.incrementAndGet(),
-//            product.getName(),
-//            product.getImage(),
-//            product.getPrice(),
-//            product.getStock());
-//    products.add(data);
-//    return data;
-    return null;
+  public Product addProduct(@Valid ProductRequest productRequest, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      bindingResult
+          .getFieldErrors()
+          .forEach(
+              fieldError -> {
+                throw new ValidationException(
+                    fieldError.getField() + ": " + fieldError.getDefaultMessage());
+              });
+    }
+
+    String fileName = storageService.store(productRequest.getImage());
+    Product data =
+        new Product(
+            counter.incrementAndGet(),
+            productRequest.getName(),
+            fileName,
+            productRequest.getPrice(),
+            productRequest.getStock());
+    products.add(data);
+    return data;
   }
 
   @PutMapping("/{id}")
