@@ -2,8 +2,11 @@ package com.example.code_mobile.controller;
 
 import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.model.Product;
+import com.example.code_mobile.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,12 @@ public class ProductController {
 
   private final AtomicLong counter = new AtomicLong();
   private final List<Product> products = new ArrayList<>();
+  private final StorageService storageService;
+
+  @Autowired
+  public ProductController(StorageService storageService) {
+    this.storageService = storageService;
+  }
 
   @GetMapping()
   public List<Product> getProducts() {
@@ -31,16 +40,21 @@ public class ProductController {
 
   @PostMapping()
   @ResponseStatus(HttpStatus.CREATED)
-  public Product addProduct(@RequestBody Product product) {
-    Product data =
-        new Product(
-            counter.incrementAndGet(),
-            product.getName(),
-            product.getImage(),
-            product.getPrice(),
-            product.getStock());
-    products.add(data);
-    return data;
+  public Product addProduct(@RequestParam MultipartFile file
+  )
+//          , @RequestBody Product product)
+  {
+    String fileName = storageService.store(file);
+//    Product data =
+//        new Product(
+//            counter.incrementAndGet(),
+//            product.getName(),
+//            product.getImage(),
+//            product.getPrice(),
+//            product.getStock());
+//    products.add(data);
+//    return data;
+    return null;
   }
 
   @PutMapping("/{id}")
