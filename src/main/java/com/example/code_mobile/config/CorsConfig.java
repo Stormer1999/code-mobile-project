@@ -1,2 +1,16 @@
-package com.example.code_mobile.config;public class CorsConfig {
+package com.example.code_mobile.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    // registry.addMapping("/**");
+    registry.addMapping("/product/*").allowedMethods("*");
+    // .allowedOrigins("https://www.w3schools.com");
+  }
 }
