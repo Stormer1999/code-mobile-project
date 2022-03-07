@@ -5,6 +5,8 @@ import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.exception.ValidationException;
 import com.example.code_mobile.model.Product;
 import com.example.code_mobile.service.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ public class ProductController {
   private final AtomicLong counter = new AtomicLong();
   private final List<Product> products = new ArrayList<>();
   private final StorageService storageService;
+  private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
   @Autowired
   public ProductController(StorageService storageService) {
