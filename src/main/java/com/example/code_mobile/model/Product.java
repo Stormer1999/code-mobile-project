@@ -19,7 +19,7 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(length = 150, nullable = false, unique = false)
+  @Column(length = 150, nullable = false)
   private String name;
 
   private String image;
