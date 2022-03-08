@@ -4,43 +4,38 @@ import com.example.code_mobile.controller.request.ProductRequest;
 import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.exception.ValidationException;
 import com.example.code_mobile.model.Product;
+import com.example.code_mobile.repository.ProductRepository;
 import com.example.code_mobile.service.StorageService;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/product")
-@Slf4j
 public class ProductController {
 
-  private final AtomicLong counter = new AtomicLong();
-  private final List<Product> products = new ArrayList<>();
   private final StorageService storageService;
 
+  private final ProductRepository productRepository;
+
   @Autowired
-  public ProductController(StorageService storageService) {
+  public ProductController(StorageService storageService, ProductRepository productRepository) {
     this.storageService = storageService;
+    this.productRepository = productRepository;
   }
 
   @GetMapping()
   public List<Product> getProducts() {
-    log.info("getProducts success");
-    return products;
+    return productRepository.findAll();
   }
 
   @GetMapping("/{id}")
   public Product getProduct(@PathVariable long id) {
-    return products.stream()
+    return productRepository.findById(id).stream()
         .filter(result -> result.getId() == id)
         .findFirst()
         .orElseThrow(() -> new ProductNotFoundException(id));
@@ -60,20 +55,18 @@ public class ProductController {
     }
 
     String fileName = storageService.store(productRequest.getImage());
-    Product data =
-        new Product(
-            counter.incrementAndGet(),
-            productRequest.getName(),
-            fileName,
-            productRequest.getPrice(),
-            productRequest.getStock());
-    products.add(data);
-    return data;
+    Product product = new Product();
+    product
+        .setName(productRequest.getName())
+        .setImage(product.getImage())
+        .setPrice(productRequest.getPrice())
+        .setStock(productRequest.getStock());
+    return productRepository.save(product);
   }
 
   @PutMapping("/{id}")
   public void editProduct(@RequestBody Product product, @PathVariable long id) {
-    products.stream()
+    productRepository.findById(id).stream()
         .filter(result -> result.getId() == id)
         .findFirst()
         .ifPresentOrElse(
@@ -82,6 +75,7 @@ public class ProductController {
               result.setImage(product.getImage());
               result.setPrice(product.getPrice());
               result.setStock(product.getStock());
+              productRepository.save(result);
             },
             () -> {
               throw new ProductNotFoundException(id);
@@ -91,11 +85,11 @@ public class ProductController {
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteProduct(@PathVariable Long id) {
-    products.stream()
+    productRepository.findById(id).stream()
         .filter(result -> result.getId() == id)
         .findFirst()
         .ifPresentOrElse(
-            products::remove,
+                productRepository::delete,
             () -> {
               throw new ProductNotFoundException(id);
             });
