@@ -4,7 +4,9 @@ import com.example.code_mobile.controller.request.ProductRequest;
 import com.example.code_mobile.exception.ProductNotFoundException;
 import com.example.code_mobile.model.Product;
 import com.example.code_mobile.repository.ProductRepository;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<Product> getAllProducts() {
-    return productRepository.findAll();
+    return productRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
   }
 
   @Override
@@ -74,5 +76,19 @@ public class ProductServiceImpl implements ProductService {
     } catch (Exception e) {
       throw new ProductNotFoundException(id);
     }
+  }
+
+  @Override
+  public Product getProductByName(String name) {
+    Optional<Product> product = productRepository.findTopByName(name);
+    if (product.isPresent()) {
+      return product.get();
+    }
+    throw new ProductNotFoundException(name);
+  }
+
+  @Override
+  public List<Product> getProductByNameAndStock(String name, int stock) {
+    return productRepository.findByNameContainingAndStockGreaterThanOrderByStockDesc(name, stock);
   }
 }

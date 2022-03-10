@@ -70,4 +70,16 @@ public class ProductController {
   public void deleteProduct(@PathVariable Long id) {
     productService.deleteProduct(id);
   }
+
+  @GetMapping(path = "/search", params = "name")
+  public Product searchProductByName(@RequestParam String name) {
+    return productService.getProductByName(name);
+  }
+
+  @GetMapping(
+      path = "/search",
+      params = {"name", "stock"})
+  public List<Product> searchProductByNameAndStock(@RequestParam String name, int stock) {
+    return productService.getProductByNameAndStock(name, stock);
+  }
 }
