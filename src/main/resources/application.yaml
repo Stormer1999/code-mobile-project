@@ -1,0 +1,60 @@
+server:
+  port: 1150
+
+app:
+  upload:
+    path: images
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024KB
+
+---
+#select profiles here
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo
+    username: postgres
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate.ddl-auto: update
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:stormer
+    username: user
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate.ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:postgresql://arjuna.db.elephantsql.com/onzwnafe
+    username: onzwnafe
+    password: aGSjdD6t-clDpMg-DmjiPKNvAiG9qFhW
+  jpa:
+    hibernate.ddl-auto: update
+server:
+  port: 1112
