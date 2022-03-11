@@ -82,4 +82,16 @@ public class ProductController {
   public List<Product> searchProductByNameAndStock(@RequestParam String name, int stock) {
     return productService.getProductByNameAndStock(name, stock);
   }
+
+  @GetMapping("/out-of-stock")
+  public List<Product> checkOutOfStock() {
+    return productService.getProductOutOfStock();
+  }
+
+  @GetMapping(
+      path = "/search",
+      params = {"name", "price"})
+  public List<Product> searchProductByNameAndPrice(@RequestParam String name, int price) {
+    return productService.getProductByNameAndPrice(name, price);
+  }
 }

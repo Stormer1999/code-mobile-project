@@ -18,4 +18,8 @@ public interface ProductService {
   Product getProductByName(String name);
 
   List<Product> getProductByNameAndStock(String name, int stock);
+
+  List<Product> getProductOutOfStock();
+
+  List<Product> getProductByNameAndPrice(String name, int price);
 }
