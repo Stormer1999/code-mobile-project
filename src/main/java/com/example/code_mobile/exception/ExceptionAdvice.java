@@ -31,4 +31,10 @@ public class ExceptionAdvice {
   String handlerValidationException(ValidationException ex) {
     return ex.getMessage();
   }
+
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  String handlerUserDuplicateException(UserDuplicateException ex) {
+    return ex.getMessage();
+  }
 }
