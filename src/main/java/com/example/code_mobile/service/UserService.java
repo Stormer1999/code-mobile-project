@@ -6,4 +6,6 @@ import com.example.code_mobile.model.User;
 public interface UserService {
 
     User register(UserRequest user);
+
+    User findUserByUsername(String username);
 }
