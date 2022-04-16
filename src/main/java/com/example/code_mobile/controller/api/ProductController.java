@@ -4,7 +4,6 @@ import com.example.code_mobile.controller.request.ProductRequest;
 import com.example.code_mobile.exception.ValidationException;
 import com.example.code_mobile.model.Product;
 import com.example.code_mobile.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
